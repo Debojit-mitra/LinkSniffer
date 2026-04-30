@@ -13,9 +13,8 @@ module.exports = {
     {
       name: "linksniffer-backend",
       cwd: "./server",
-      script: "./venv/bin/python",
-      args: "app.py",
-      interpreter: "none",
+      script: "app.py",
+      interpreter: "venv/bin/python",
       env: {
         PORT: 5002,
       },
