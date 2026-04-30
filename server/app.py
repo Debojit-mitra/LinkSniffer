@@ -337,9 +337,9 @@ if __name__ == '__main__':
         DEBUG = False
     
     if DEBUG:
-        print("Starting development server on port 5000...")
-        app.run(port=5000, debug=True)
+        print("Starting development server on port 5002...")
+        app.run(port=5002, debug=True)
     else:
         from waitress import serve
-        print("Starting production server on port 5000 with Waitress...")
-        serve(app, host='0.0.0.0', port=5000)
+        print("Starting production server on port 5002 with Waitress...")
+        serve(app, host='0.0.0.0', port=5002)

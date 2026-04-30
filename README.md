@@ -63,7 +63,7 @@ Follow these instructions to get a copy of the project up and running on your lo
    ```bash
    python app.py
    ```
-   *The server will start on `http://localhost:5000`.*
+   *The server will start on `http://localhost:5002`.*
 
 ### 2. Frontend Setup
 
@@ -79,7 +79,29 @@ Follow these instructions to get a copy of the project up and running on your lo
    ```bash
    npm run dev
    ```
-   *The frontend will be available at `http://localhost:3000`.*
+   *The frontend will be available at `http://localhost:3003`.*
+
+### 3. Production Deployment with PM2
+
+To run both the Next.js frontend and Python backend continuously in the background, you can use PM2. This project includes an `ecosystem.config.js` file at the root.
+
+1. Ensure the frontend is built:
+   ```bash
+   cd client
+   npm run build
+   cd ..
+   ```
+2. Start both applications globally using PM2:
+   ```bash
+   pm2 start ecosystem.config.js
+   ```
+   *Note: Make sure your Python virtual environment is set up in `server/venv` as PM2 is configured to look for the Python interpreter there.*
+
+3. To view logs or manage processes:
+   ```bash
+   pm2 logs
+   pm2 status
+   ```
 
 ---
 
