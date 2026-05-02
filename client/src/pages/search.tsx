@@ -12,7 +12,8 @@ import {
   MovieResult,
 } from "../store/searchReducer";
 import { Layout } from "../components/Layout";
-import { API_BASE } from "../constants";
+
+const API_BASE = "/api";
 
 const containerVariants = {
   hidden: {},

@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store";
 import { setEpisodesCache, Episode } from "../store/searchReducer";
 import { Layout } from "../components/Layout";
-import { API_BASE } from "../constants";
+
+const API_BASE = "/api";
 
 const listContainerVariants = {
   hidden: {},

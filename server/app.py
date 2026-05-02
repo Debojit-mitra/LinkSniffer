@@ -7,8 +7,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+import os
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -356,15 +360,13 @@ def get_episodes():
     return jsonify({"episodes": episodes})
 
 if __name__ == '__main__':
-    try:
-        from constants import DEBUG
-    except ImportError:
-        DEBUG = False
+    DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+    PORT = int(os.getenv('PORT', 5002))
     
     if DEBUG:
-        print("Starting development server on port 5002...")
-        app.run(port=5002, debug=True)
+        print(f"Starting development server on port {PORT}...")
+        app.run(port=PORT, debug=True)
     else:
         from waitress import serve
-        print("Starting production server on port 5002 with Waitress...")
-        serve(app, host='0.0.0.0', port=5002)
+        print(f"Starting production server on port {PORT} with Waitress...")
+        serve(app, host='0.0.0.0', port=PORT)
