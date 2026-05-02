@@ -23,35 +23,34 @@ def get_driver():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     
-    # Try to find chromium and chromedriver in common RPi locations
     import os
-    import platform
     
-    is_arm = platform.machine().startswith('arm') or platform.machine().startswith('aarch64')
-    
-    # Common locations for Chromium on RPi/Debian
-    chromium_paths = ["/usr/bin/chromium-browser", "/usr/bin/chromium"]
-    for path in chromium_paths:
+    # 1. Find the browser binary
+    browser_paths = [
+        "/usr/bin/chromium-browser",
+        "/usr/bin/chromium",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/google-chrome"
+    ]
+    for path in browser_paths:
         if os.path.exists(path):
             chrome_options.binary_location = path
             break
             
-    # Common locations for Chromedriver on RPi/Debian
+    # 2. Find the chromedriver
+    # On RPi, the system driver is the most reliable
     chromedriver_path = "/usr/bin/chromedriver"
     
-    if is_arm and os.path.exists(chromedriver_path):
+    if os.path.exists(chromedriver_path):
         print(f"Using system chromedriver at {chromedriver_path}")
         service = Service(chromedriver_path)
     else:
         try:
-            # Fallback to webdriver-manager if not on ARM or system driver not found
+            # Fallback for local development or other servers
+            from webdriver_manager.chrome import ChromeDriverManager
             service = Service(ChromeDriverManager().install())
         except Exception as e:
-            if os.path.exists(chromedriver_path):
-                print(f"Webdriver manager failed, falling back to system chromedriver: {e}")
-                service = Service(chromedriver_path)
-            else:
-                raise e
+            raise Exception(f"No system chromedriver found at {chromedriver_path} and fallback failed: {e}")
 
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
