@@ -15,15 +15,40 @@ CORS(app)
 
 def get_driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Added headless mode
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     
-    # Force use of chromium
-    chrome_options.binary_location = "/usr/bin/chromium"
+    # Try to find chromium and chromedriver in common RPi locations
+    import os
+    import platform
     
-    # Correctly handle version for Chromium
-    service = Service(ChromeDriverManager(driver_version="146.0.7680.177").install())
+    is_arm = platform.machine().startswith('arm') or platform.machine().startswith('aarch64')
+    
+    # Common locations for Chromium on RPi/Debian
+    chromium_paths = ["/usr/bin/chromium-browser", "/usr/bin/chromium"]
+    for path in chromium_paths:
+        if os.path.exists(path):
+            chrome_options.binary_location = path
+            break
+            
+    # Common locations for Chromedriver on RPi/Debian
+    chromedriver_path = "/usr/bin/chromedriver"
+    
+    if is_arm and os.path.exists(chromedriver_path):
+        print(f"Using system chromedriver at {chromedriver_path}")
+        service = Service(chromedriver_path)
+    else:
+        try:
+            # Fallback to webdriver-manager if not on ARM or system driver not found
+            service = Service(ChromeDriverManager().install())
+        except Exception as e:
+            if os.path.exists(chromedriver_path):
+                print(f"Webdriver manager failed, falling back to system chromedriver: {e}")
+                service = Service(chromedriver_path)
+            else:
+                raise e
+
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
