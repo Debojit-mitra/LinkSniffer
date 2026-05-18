@@ -1,10 +1,12 @@
 # 🎯 LinkSniffer
 
-LinkSniffer is a modern, high-performance web application designed to bypass ad-cluttered websites and extract direct, high-quality download links for your favorite movies and series. 
+LinkSniffer is a modern, high-performance web application designed to bypass ad-cluttered websites and extract direct, high-quality download links for your favorite movies and series.
 
 With a beautiful interface powered by Next.js and a robust headless scraping engine built in Python, LinkSniffer eleganty navigates the web so you don't have to.
 
-![LinkSniffer UI](https://raw.githubusercontent.com/iconify/icon-sets/master/svg/mdi/radar.svg)
+<div style="background: linear-gradient(to bottom right, #4ade80, #14b8a6); border-radius: 20px; padding: 40px; position: relative; overflow: hidden; max-width: 400px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);">
+  <img src="https://api.iconify.design/mdi:magnify-expand.svg?color=%23030705" alt="LinkSniffer UI" width="150" />
+</div>
 
 ---
 
@@ -21,6 +23,7 @@ With a beautiful interface powered by Next.js and a robust headless scraping eng
 ## 🛠️ Technology Stack
 
 **Frontend (Client):**
+
 - **Framework**: Next.js (Pages Router)
 - **Styling**: Tailwind CSS, clsx, tailwind-merge
 - **State Management**: Redux Toolkit (`react-redux`)
@@ -28,10 +31,11 @@ With a beautiful interface powered by Next.js and a robust headless scraping eng
 - **Icons**: Iconify API (`@iconify/react`)
 
 **Backend (Server):**
-- **Framework**: Python Flask
-- **Scraping Engine**: Selenium WebDriver (Headless Chrome)
-- **WSGI Server**: Waitress
-- **CORS**: Flask-CORS
+
+- **Framework**: Node.js with Express
+- **Scraping Engine**: Puppeteer (Headless Chrome)
+- **Language**: TypeScript
+- **CORS**: cors
 
 ---
 
@@ -40,9 +44,9 @@ With a beautiful interface powered by Next.js and a robust headless scraping eng
 Follow these instructions to get a copy of the project up and running on your local machine.
 
 ### Prerequisites
+
 - Node.js (v18+)
-- Python (v3.8+)
-- Google Chrome (required for Selenium headless scraping)
+- Google Chrome (required for Puppeteer headless scraping)
 
 ### 1. Backend Setup
 
@@ -50,20 +54,15 @@ Follow these instructions to get a copy of the project up and running on your lo
    ```bash
    cd server
    ```
-2. Create and activate a Python virtual environment:
+2. Install Node dependencies:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   npm install
    ```
-3. Install the required Python packages:
+3. Start the development server:
    ```bash
-   pip install -r requirements.txt
+   npm run dev
    ```
-4. Start the server:
-   ```bash
-   python app.py
-   ```
-   *The server will start on `http://localhost:5002`.*
+   _The server will start on `http://localhost:5002`._
 
 ### 2. Frontend Setup
 
@@ -79,23 +78,25 @@ Follow these instructions to get a copy of the project up and running on your lo
    ```bash
    npm run dev
    ```
-   *The frontend will be available at `http://localhost:3003`.*
+   _The frontend will be available at `http://localhost:3003`._
 
 ### 3. Production Deployment with PM2
 
-To run both the Next.js frontend and Python backend continuously in the background, you can use PM2. This project includes an `ecosystem.config.js` file at the root.
+To run both the Next.js frontend and Node backend continuously in the background, you can use PM2. This project includes an `ecosystem.config.js` file at the root.
 
-1. Ensure the frontend is built:
+1. Ensure the frontend and backend are built:
    ```bash
    cd client
+   npm run build
+   cd ../server
    npm run build
    cd ..
    ```
 2. Start both applications globally using PM2:
+
    ```bash
    pm2 start ecosystem.config.js
    ```
-   *Note: Make sure your Python virtual environment is set up in `server/venv` as PM2 is configured to look for the Python interpreter there.*
 
 3. To view logs or manage processes:
    ```bash
@@ -109,9 +110,9 @@ To run both the Next.js frontend and Python backend continuously in the backgrou
 
 - **API Base URL**: The frontend communicates with the backend via the `API_BASE` constant. If you deploy the backend to a remote server, update the URL in:
   `client/src/constants.ts`
-- **Server Debug Mode**: To run the Python server in Flask's development mode instead of Waitress (useful for auto-reloading during development), open `server/app.py` and set:
-  ```python
-  DEBUG = True
+- **Server Debug Mode**: To run the backend in debug mode, open or create `server/.env` and set:
+  ```env
+  DEBUG=true
   ```
 
 ---
